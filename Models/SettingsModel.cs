@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using BetterAmmoLoadingList.Enums;
 using BetterAmmoLoadingList.Utils;
 using UnityEngine;
 
@@ -10,6 +11,10 @@ namespace BetterAmmoLoadingList.Models
 	public class SettingsModel
 	{
 		public static SettingsModel Instance { get; private set; }
+
+		public ConfigEntry<bool> ColorGradient;
+		public ConfigEntry<SortOrderType> SortOrder;
+		public ConfigEntry<StatAmmoType> StatAmmo;
 		
 #if DEBUG
 		public ConfigEntry<KeyboardShortcut> SavePos;
@@ -21,6 +26,24 @@ namespace BetterAmmoLoadingList.Models
 		
 		private SettingsModel(ConfigFile configFile)
 		{
+			ColorGradient = configFile.Bind(
+				"Settings",
+				"ColorGradient",
+				true,
+				new ConfigDescription("Enable color gradient for context menu ammo load"));
+			
+			SortOrder = configFile.Bind(
+				"Settings",
+				"Sort Order Type",
+				SortOrderType.Descending,
+				new ConfigDescription("Sort order by penetration power"));
+			
+			StatAmmo = configFile.Bind(
+				"Settings",
+				"Sort ammo by stat type",
+				StatAmmoType.PenetrationPower,
+				new ConfigDescription("Sort order by selected stat ammo type"));
+			
 #if DEBUG
 			#region Overlay
 

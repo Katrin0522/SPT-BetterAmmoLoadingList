@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Kat.BetterAmmoLoadingList")]
 [assembly: AssemblyProduct("Kat.BetterAmmoLoadingList")]
-[assembly: AssemblyDescription("See penetration heavy in context menu")]
+[assembly: AssemblyDescription("See details ammo in load list")]
 [assembly: AssemblyConfiguration("Release")]
 [assembly: AssemblyCompany("Kat.BetterAmmoLoadingList")]
 [assembly: AssemblyCopyright("Copyright© 2025")]
 [assembly: ComVisible(false)]
-[assembly: Guid("7c043e89-a2c2-4a90-aa67-3d8bea62ae09")]
+[assembly: Guid("afde256d-317a-4aa8-9aaa-bd825b1bf53f")]

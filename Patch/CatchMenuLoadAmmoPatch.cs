@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using BetterAmmoLoadingList.Enums;
+using BetterAmmoLoadingList.Models;
 using EFT.InventoryLogic;
 using EFT.UI;
 using HarmonyLib;
@@ -36,8 +38,6 @@ namespace BetterAmmoLoadingList.Patch
             
             var ammoListRaw = uiContext.FindCompatibleAmmo(magazine).ToList();
             
-            
-            
             var ammoWithData = ammoListRaw
                 .Select(pair => new
                 {
@@ -46,59 +46,210 @@ namespace BetterAmmoLoadingList.Patch
                 })
                 .Where(x => x.Ammo != null)
                 .ToList();
-            
-            int maxPen = ammoWithData.Max(x => x.Ammo.PenetrationPower);
-            int minPen = ammoWithData.Min(x => x.Ammo.PenetrationPower);
-            
-            var ammoList = ammoWithData.OrderByDescending(x => x.Ammo.PenetrationPower);
-            
-            foreach (var entry in ammoList)
+
+            if (SettingsModel.Instance.StatAmmo.Value == StatAmmoType.PenetrationPower)
             {
-                var pair = entry.Pair;
+                int maxPen = ammoWithData.Max(x => x.Ammo.PenetrationPower);
+                int minPen = ammoWithData.Min(x => x.Ammo.PenetrationPower);
 
-                var ammoClass = new GClass3493.Class2711
+                //Standard sort as ascending
+                var ammoList = ammoWithData.OrderBy(x => x.Ammo.PenetrationPower);
+            
+                //If we toggle in Descending, do another order
+                if (SettingsModel.Instance.SortOrder.Value == SortOrderType.Descending)
                 {
-                    gclass3493_0 = __instance,
-                    ammoType = pair.Key
-                };
+                    ammoList = ammoWithData.OrderByDescending(x => x.Ammo.PenetrationPower);
+                }
+            
+                foreach (var entry in ammoList)
+                {
+                    var pair = entry.Pair;
+
+                    var ammoClass = new GClass3493.Class2711
+                    {
+                        gclass3493_0 = __instance,
+                        ammoType = pair.Key
+                    };
                 
-                __instance.bool_0 = true;
+                    __instance.bool_0 = true;
 
-                AmmoTemplate ammoData = magazineBuildClass.GetAmmoTemplate(ammoClass.ammoType);
+                    AmmoTemplate ammoData = magazineBuildClass.GetAmmoTemplate(ammoClass.ammoType);
 
-                string valueAmmo = GetPenetrationValue(ammoData, minPen, maxPen);
+                    string valueAmmo = GetPenetrationValue(ammoData, minPen, maxPen);
                 
-                string text = string.Format(
-                    "<b><color=#C6C4B2>{0}</color> <color=#ADB8BC>({1})</color>{2}</b>",
-                    LocalizedName(ammoClass.ammoType),
-                    pair.Value,
-                    valueAmmo
-                );
+                    string text = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{valueAmmo}</b>";
 
-                __instance.method_2(ammoClass.ammoType, text, new Action(ammoClass.method_0), null);
+                    __instance.method_2(ammoClass.ammoType, text, ammoClass.method_0);
+                }
             }
+            else if (SettingsModel.Instance.StatAmmo.Value == StatAmmoType.Damage)
+            {
+                int maxDamage = ammoWithData.Max(x => x.Ammo.Damage);
+                int minDamage = ammoWithData.Min(x => x.Ammo.Damage);
+
+                //Standard sort as ascending
+                var ammoList = ammoWithData.OrderBy(x => x.Ammo.Damage);
+            
+                //If we toggle in Descending, do another order
+                if (SettingsModel.Instance.SortOrder.Value == SortOrderType.Descending)
+                {
+                    ammoList = ammoWithData.OrderByDescending(x => x.Ammo.Damage);
+                }
+            
+                foreach (var entry in ammoList)
+                {
+                    var pair = entry.Pair;
+
+                    var ammoClass = new GClass3493.Class2711
+                    {
+                        gclass3493_0 = __instance,
+                        ammoType = pair.Key
+                    };
+                
+                    __instance.bool_0 = true;
+
+                    AmmoTemplate ammoData = magazineBuildClass.GetAmmoTemplate(ammoClass.ammoType);
+
+                    string valueAmmo = GetDamageValue(ammoData, minDamage, maxDamage);
+                
+                    string text = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{valueAmmo}</b>";
+
+                    __instance.method_2(ammoClass.ammoType, text, ammoClass.method_0);
+                }
+            }
+            else if (SettingsModel.Instance.StatAmmo.Value == StatAmmoType.VelocitySpeed)
+            {
+                int maxSpeed = ammoWithData.Max(x => (int)x.Ammo.InitialSpeed);
+                int minSpeed = ammoWithData.Min(x => (int)x.Ammo.InitialSpeed);
+
+                //Standard sort as ascending
+                var ammoList = ammoWithData.OrderBy(x => x.Ammo.InitialSpeed);
+            
+                //If we toggle in Descending, do another order
+                if (SettingsModel.Instance.SortOrder.Value == SortOrderType.Descending)
+                {
+                    ammoList = ammoWithData.OrderByDescending(x => x.Ammo.InitialSpeed);
+                }
+            
+                foreach (var entry in ammoList)
+                {
+                    var pair = entry.Pair;
+
+                    var ammoClass = new GClass3493.Class2711
+                    {
+                        gclass3493_0 = __instance,
+                        ammoType = pair.Key
+                    };
+                
+                    __instance.bool_0 = true;
+
+                    AmmoTemplate ammoData = magazineBuildClass.GetAmmoTemplate(ammoClass.ammoType);
+
+                    string valueAmmo = GetSpeedValue(ammoData, minSpeed, maxSpeed);
+                
+                    string text = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{valueAmmo}</b>";
+
+                    __instance.method_2(ammoClass.ammoType, text, ammoClass.method_0);
+                }
+            }
+            
+            
         }
 
-        public static string GetPenetrationValue(AmmoTemplate ammo, int minPen, int maxPen)
+        private static string GetPenetrationValue(AmmoTemplate ammo, int minPen, int maxPen)
         {
-            if (ammo?.PenetrationPower != null)
+            if (SettingsModel.Instance.ColorGradient.Value)
             {
-                int pen = ammo?.PenetrationPower ?? 0;
-                float t = (maxPen == minPen) ? 1f : (pen - minPen) / (float)(maxPen - minPen);
-                t = Mathf.Clamp(t, 0f, 1f);
+                if (ammo?.PenetrationPower != null)
+                {
+                    int penValue = ammo?.PenetrationPower ?? 0;
+                    float t = (maxPen == minPen) ? 1f : (penValue - minPen) / (float)(maxPen - minPen);
+                    t = Mathf.Clamp(t, 0f, 1f);
             
-                int r = (int)(255 * (1f - t));
-                int g = (int)(255 * t);
-                int b = 50;
+                    int r = (int)(255 * (1f - t));
+                    int g = (int)(255 * t);
+                    int b = 50;
 
-                string colorHex = $"#{r:X2}{g:X2}{b:X2}";
-                return $" <color={colorHex}>[{pen}]</color>";
+                    string colorHex = $"#{r:X2}{g:X2}{b:X2}";
+                    return $" <color={colorHex}>[{penValue}]</color>";
+                }
+
+                return "";
             }
+            else
+            {
+                if (ammo?.PenetrationPower != null)
+                {
+                    return $" [{ammo.PenetrationPower}]";
+                }
 
-            return "";
+                return "";
+            }
         }
         
-        public static string LocalizedName(string itemTemplateId)
+        private static string GetDamageValue(AmmoTemplate ammo, int minDamage, int maxDamage)
+        {
+            if (SettingsModel.Instance.ColorGradient.Value)
+            {
+                if (ammo?.Damage != null)
+                {
+                    int damageValue = ammo?.Damage ?? 0;
+                    float t = (maxDamage == minDamage) ? 1f : (damageValue - minDamage) / (float)(maxDamage - minDamage);
+                    t = Mathf.Clamp(t, 0f, 1f);
+            
+                    int r = (int)(255 * (1f - t));
+                    int g = (int)(255 * t);
+                    int b = 50;
+
+                    string colorHex = $"#{r:X2}{g:X2}{b:X2}";
+                    return $" <color={colorHex}>[{damageValue}]</color>";
+                }
+
+                return "";
+            }
+            else
+            {
+                if (ammo?.Damage != null)
+                {
+                    return $" [{ammo.Damage}]";
+                }
+
+                return "";
+            }
+        }
+        
+        private static string GetSpeedValue(AmmoTemplate ammo, int minSpeed, int maxSpeed)
+        {
+            if (SettingsModel.Instance.ColorGradient.Value)
+            {
+                if (ammo?.InitialSpeed != null)
+                {
+                    float speedValue = ammo?.InitialSpeed ?? 0;
+                    float t = (maxSpeed == minSpeed) ? 1f : (speedValue - minSpeed) / (float)(maxSpeed - minSpeed);
+                    t = Mathf.Clamp(t, 0f, 1f);
+            
+                    int r = (int)(255 * (1f - t));
+                    int g = (int)(255 * t);
+                    int b = 50;
+
+                    string colorHex = $"#{r:X2}{g:X2}{b:X2}";
+                    return $" <color={colorHex}>[{speedValue}]</color>";
+                }
+
+                return "";
+            }
+            else
+            {
+                if (ammo?.InitialSpeed != null)
+                {
+                    return $" [{ammo.InitialSpeed}]";
+                }
+
+                return "";
+            }
+        }
+
+        private static string LocalizedName(string itemTemplateId)
         {
             return LocaleManagerClass.LocaleManagerClass.method_4(itemTemplateId + " Name");
         }

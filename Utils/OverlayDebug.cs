@@ -1,4 +1,5 @@
-﻿using BetterAmmoLoadingList.Models;
+﻿#if DEBUG
+using BetterAmmoLoadingList.Models;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -70,3 +71,4 @@ public class OverlayDebug: MonoBehaviour
         Destroy(this);
     }
 }
+#endif
