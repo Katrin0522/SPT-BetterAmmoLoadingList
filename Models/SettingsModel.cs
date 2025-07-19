@@ -13,6 +13,7 @@ namespace BetterAmmoLoadingList.Models
 		public static SettingsModel Instance { get; private set; }
 
 		public ConfigEntry<bool> ColorGradient;
+		public ConfigEntry<bool> GlobalEnable;
 		public ConfigEntry<SortOrderType> SortOrder;
 		public ConfigEntry<StatAmmoType> StatAmmo;
 		
@@ -26,23 +27,49 @@ namespace BetterAmmoLoadingList.Models
 		
 		private SettingsModel(ConfigFile configFile)
 		{
+			GlobalEnable = configFile.Bind(
+				"Settings",
+				"Enable feature",
+				true,
+				new ConfigDescription("Enable sort/coloring/show stats ammo in load list",
+					null, 
+					new ConfigurationManagerAttributes
+					{
+						Order = 3
+					}));
+			
 			ColorGradient = configFile.Bind(
 				"Settings",
 				"ColorGradient",
 				true,
-				new ConfigDescription("Enable color gradient for context menu ammo load"));
+				new ConfigDescription("Enable color gradient for context menu ammo load",
+					null, 
+					new ConfigurationManagerAttributes
+					{
+						Order = 2
+					}));
 			
 			SortOrder = configFile.Bind(
 				"Settings",
 				"Sort Order Type",
 				SortOrderType.Descending,
-				new ConfigDescription("Sort order by penetration power"));
+				new ConfigDescription("Sort order by penetration power",
+					null, 
+					new ConfigurationManagerAttributes
+					{
+						Order = 1
+					}));
 			
 			StatAmmo = configFile.Bind(
 				"Settings",
 				"Sort ammo by stat type",
 				StatAmmoType.PenetrationPower,
-				new ConfigDescription("Sort order by selected stat ammo type"));
+				new ConfigDescription("Sort order by selected stat ammo type",
+					null, 
+					new ConfigurationManagerAttributes
+					{
+						Order = 0
+					}));
 			
 #if DEBUG
 			#region Overlay
