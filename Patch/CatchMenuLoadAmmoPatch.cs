@@ -235,6 +235,7 @@ namespace BetterAmmoLoadingList.Patch
                 if (ammo?.InitialSpeed != null)
                 {
                     float speedValue = ammo?.InitialSpeed ?? 0;
+                    string formattedValue = speedValue + " " + "m/s".Localized();
                     float t = (maxSpeed == minSpeed) ? 1f : (speedValue - minSpeed) / (float)(maxSpeed - minSpeed);
                     t = Mathf.Clamp(t, 0f, 1f);
             
@@ -243,7 +244,7 @@ namespace BetterAmmoLoadingList.Patch
                     int b = 50;
 
                     string colorHex = $"#{r:X2}{g:X2}{b:X2}";
-                    return $" <color={colorHex}>[{speedValue}]</color>";
+                    return $" <color={colorHex}>[{formattedValue}]</color>";
                 }
 
                 return "";
@@ -252,7 +253,9 @@ namespace BetterAmmoLoadingList.Patch
             {
                 if (ammo?.InitialSpeed != null)
                 {
-                    return $" [{ammo.InitialSpeed}]";
+                    string formattedValue = ammo.InitialSpeed.ToString() + " " + "m/s".Localized();
+                    
+                    return $" [{formattedValue}]";
                 }
 
                 return "";
