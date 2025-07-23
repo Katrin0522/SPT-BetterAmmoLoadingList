@@ -80,11 +80,20 @@ namespace BetterAmmoLoadingList.Patch
 
                         AmmoTemplate ammoData = magazineBuildClass.GetAmmoTemplate(ammoClass.ammoType);
 
-                        string valueAmmo = GetPenetrationValue(ammoData, minPen, maxPen);
-                
-                        string text = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{valueAmmo}</b>";
-
-                        __instance.method_2(ammoClass.ammoType, text, ammoClass.method_0);
+                        string penetrateValue = GetPenetrationValue(ammoData, minPen, maxPen);
+                        
+                        string ammoTextItem = "";
+                        if (SettingsModel.Instance.ShowAllStats.Value)
+                        {
+                            string speedValue = GetSpeedValue(ammoData);
+                            string damageValue = GetDamageValue(ammoData);
+                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{GetWrapText()}<color=#ADB8BC>{damageValue}</color>{penetrateValue}<color=#ADB8BC>{speedValue}</color></b>";
+                        }
+                        else
+                        {
+                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{penetrateValue}</b>";
+                        }
+                        __instance.method_2(ammoClass.ammoType, ammoTextItem, ammoClass.method_0);
                     }
 
                     break;
@@ -117,11 +126,21 @@ namespace BetterAmmoLoadingList.Patch
 
                         AmmoTemplate ammoData = magazineBuildClass.GetAmmoTemplate(ammoClass.ammoType);
 
-                        string valueAmmo = GetDamageValue(ammoData, minDamage, maxDamage);
-                
-                        string text = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{valueAmmo}</b>";
+                        string damageValue = GetDamageValue(ammoData, minDamage, maxDamage);
 
-                        __instance.method_2(ammoClass.ammoType, text, ammoClass.method_0);
+                        string ammoTextItem = "";
+                        if (SettingsModel.Instance.ShowAllStats.Value)
+                        {
+                            string speedValue = GetSpeedValue(ammoData);
+                            string penetrateValue = GetPenetrationValue(ammoData);
+                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{GetWrapText()}{damageValue}<color=#ADB8BC>{penetrateValue}</color><color=#ADB8BC>{speedValue}</color></b>";
+                        }
+                        else
+                        {
+                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{damageValue}</b>";
+                        }
+
+                        __instance.method_2(ammoClass.ammoType, ammoTextItem, ammoClass.method_0);
                     }
 
                     break;
@@ -154,11 +173,21 @@ namespace BetterAmmoLoadingList.Patch
 
                         AmmoTemplate ammoData = magazineBuildClass.GetAmmoTemplate(ammoClass.ammoType);
 
-                        string valueAmmo = GetSpeedValue(ammoData, minSpeed, maxSpeed);
-                
-                        string text = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{valueAmmo}</b>";
+                        string speedValue = GetSpeedValue(ammoData, minSpeed, maxSpeed);
 
-                        __instance.method_2(ammoClass.ammoType, text, ammoClass.method_0);
+                        string ammoTextItem = "";
+                        if (SettingsModel.Instance.ShowAllStats.Value)
+                        {
+                            string damageValue = GetDamageValue(ammoData);
+                            string penetrateValue = GetPenetrationValue(ammoData);
+                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{GetWrapText()}<color=#ADB8BC>{damageValue}</color><color=#ADB8BC>{penetrateValue}</color>{speedValue}</b>";
+                        }
+                        else
+                        {
+                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{speedValue}</b>";
+                        }
+
+                        __instance.method_2(ammoClass.ammoType, ammoTextItem, ammoClass.method_0);
                     }
 
                     break;
@@ -285,6 +314,11 @@ namespace BetterAmmoLoadingList.Patch
             Color32 c32 = finalColor;
 
             return $"#{c32.r:X2}{c32.g:X2}{c32.b:X2}";
+        }
+
+        private static string GetWrapText()
+        {
+            return SettingsModel.Instance.IsWrapText.Value ? "\n" : "";
         }
     }
 }

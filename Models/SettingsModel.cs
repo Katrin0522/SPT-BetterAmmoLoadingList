@@ -13,12 +13,13 @@ namespace BetterAmmoLoadingList.Models
 		public static SettingsModel Instance { get; private set; }
 
 		public ConfigEntry<bool> ColorGradient;
-		public ConfigEntry<bool> ShowAllStats;
 		public ConfigEntry<Color> ColorGradientBest;
 		public ConfigEntry<Color> ColorGradientWorst;
 		public ConfigEntry<bool> GlobalEnable;
 		public ConfigEntry<SortOrderType> SortOrder;
 		public ConfigEntry<StatAmmoType> StatAmmo;
+		public ConfigEntry<bool> ShowAllStats;
+		public ConfigEntry<bool> IsWrapText;
 		
 		private SettingsModel(ConfigFile configFile)
 		{
@@ -30,7 +31,7 @@ namespace BetterAmmoLoadingList.Models
 					null, 
 					new ConfigurationManagerAttributes
 					{
-						Order = 3
+						Order = 5
 					}));
 			
 			ColorGradient = configFile.Bind(
@@ -87,6 +88,29 @@ namespace BetterAmmoLoadingList.Models
 					{
 						Order = 0
 					}));
+			
+			ShowAllStats = configFile.Bind(
+				"[EXPERIMENTAL SETTINGS]",
+				"Show All Stats",
+				false,
+				new ConfigDescription("[EXPERIMENTAL] Show all stats in list, them will be sorted by selected stat type, selected type will be colored, other non color",
+					null, 
+					new ConfigurationManagerAttributes
+					{
+						Order = 1
+					}));
+			
+			IsWrapText = configFile.Bind(
+				"[EXPERIMENTAL SETTINGS]",
+				"Warp Text Stats",
+				false,
+				new ConfigDescription("[EXPERIMENTAL] When this setting is enabled, the ammunition stats will wrap to the following line",
+					null, 
+					new ConfigurationManagerAttributes
+					{
+						Order = 0
+					}));
+
 		}
 		
 		/// <summary>
