@@ -119,7 +119,6 @@
         <Compile Include="Models\ConfigurationManagerAttributes.cs" />
         <Compile Include="Models\SettingsModel.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
-        <Compile Include="Utils\OverlayDebug.cs" />
         <Compile Include="Utils\PlayerHelper.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>

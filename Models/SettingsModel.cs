@@ -17,14 +17,6 @@ namespace BetterAmmoLoadingList.Models
 		public ConfigEntry<SortOrderType> SortOrder;
 		public ConfigEntry<StatAmmoType> StatAmmo;
 		
-#if DEBUG
-		public ConfigEntry<KeyboardShortcut> SavePos;
-		public ConfigEntry<KeyboardShortcut> SeeDistance;
-		public ConfigEntry<float> PositionXDebug;
-		public ConfigEntry<float> PositionYDebug;
-		public ConfigEntry<int> FontSizeDebug;
-#endif
-		
 		private SettingsModel(ConfigFile configFile)
 		{
 			GlobalEnable = configFile.Bind(
@@ -70,45 +62,6 @@ namespace BetterAmmoLoadingList.Models
 					{
 						Order = 0
 					}));
-			
-#if DEBUG
-			#region Overlay
-
-			PositionXDebug = configFile.Bind(
-				"Settings",
-				"PositionX",
-				10f,
-				new ConfigDescription("X Position", new AcceptableValueRange<float>(-2000f, 2000f)));
-
-			PositionYDebug = configFile.Bind(
-				"Settings",
-				"PositionY",
-				-10f,
-				new ConfigDescription("Y Position", new AcceptableValueRange<float>(-2000f, 2000f)));
-			
-			FontSizeDebug = configFile.Bind(
-				"Settings",
-				"FontSizeDebug",
-				28,
-				new ConfigDescription("FontSizeDebug", new AcceptableValueRange<int>(0, 200)));
-
-			#endregion
-
-			PositionXDebug.SettingChanged += (_, __) =>
-			{
-				OverlayDebug.Instance.SetOverlayPosition(new Vector2(PositionXDebug.Value, PositionYDebug.Value));
-			};
-			
-			PositionYDebug.SettingChanged += (_, __) =>
-			{
-				OverlayDebug.Instance.SetOverlayPosition(new Vector2(PositionXDebug.Value, PositionYDebug.Value));
-			};
-
-			FontSizeDebug.SettingChanged += (_, __) =>
-			{
-				OverlayDebug.Instance.SetFontSize(FontSizeDebug.Value);
-			};
-#endif
 		}
 		
 		/// <summary>

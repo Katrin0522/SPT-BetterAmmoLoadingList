@@ -4,5 +4,5 @@ public enum StatAmmoType
 {
     PenetrationPower,
     VelocitySpeed,
-    Damage,
+    Damage
 }
