@@ -13,6 +13,9 @@ namespace BetterAmmoLoadingList.Models
 		public static SettingsModel Instance { get; private set; }
 
 		public ConfigEntry<bool> ColorGradient;
+		public ConfigEntry<bool> ShowAllStats;
+		public ConfigEntry<Color> ColorGradientBest;
+		public ConfigEntry<Color> ColorGradientWorst;
 		public ConfigEntry<bool> GlobalEnable;
 		public ConfigEntry<SortOrderType> SortOrder;
 		public ConfigEntry<StatAmmoType> StatAmmo;
@@ -32,9 +35,31 @@ namespace BetterAmmoLoadingList.Models
 			
 			ColorGradient = configFile.Bind(
 				"Settings",
-				"ColorGradient",
+				"Color Gradient",
 				true,
 				new ConfigDescription("Enable color gradient for context menu ammo load",
+					null, 
+					new ConfigurationManagerAttributes
+					{
+						Order = 4
+					}));
+			
+			ColorGradientBest = configFile.Bind(
+				"Settings",
+				"Color Gradient Best",
+				Color.green,
+				new ConfigDescription("Color preset for best ammo",
+					null, 
+					new ConfigurationManagerAttributes
+					{
+						Order = 3
+					}));
+			
+			ColorGradientWorst = configFile.Bind(
+				"Settings",
+				"Color Gradient Worst",
+				Color.red,
+				new ConfigDescription("Color preset for worst ammo",
 					null, 
 					new ConfigurationManagerAttributes
 					{
@@ -45,7 +70,7 @@ namespace BetterAmmoLoadingList.Models
 				"Settings",
 				"Sort Order Type",
 				SortOrderType.Descending,
-				new ConfigDescription("Sort order by penetration power",
+				new ConfigDescription("Sort order by selected type",
 					null, 
 					new ConfigurationManagerAttributes
 					{

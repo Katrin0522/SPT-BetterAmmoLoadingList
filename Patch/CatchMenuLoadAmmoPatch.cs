@@ -175,26 +175,15 @@ namespace BetterAmmoLoadingList.Patch
                     int penValue = ammo?.PenetrationPower ?? 0;
                     float t = (maxPen == minPen) ? 1f : (penValue - minPen) / (float)(maxPen - minPen);
                     t = Mathf.Clamp(t, 0f, 1f);
-            
-                    int r = (int)(255 * (1f - t));
-                    int g = (int)(255 * t);
-                    int b = 50;
 
-                    string colorHex = $"#{r:X2}{g:X2}{b:X2}";
+                    var colorHex = GetColorGradient(t);
                     return $" <color={colorHex}>[{penValue}]</color>";
                 }
 
                 return "";
             }
-            else
-            {
-                if (ammo?.PenetrationPower != null)
-                {
-                    return $" [{ammo.PenetrationPower}]";
-                }
 
-                return "";
-            }
+            return GetPenetrationValue(ammo);
         }
         
         private static string GetDamageValue(AmmoTemplate ammo, int minDamage, int maxDamage)
@@ -207,25 +196,14 @@ namespace BetterAmmoLoadingList.Patch
                     float t = (maxDamage == minDamage) ? 1f : (damageValue - minDamage) / (float)(maxDamage - minDamage);
                     t = Mathf.Clamp(t, 0f, 1f);
             
-                    int r = (int)(255 * (1f - t));
-                    int g = (int)(255 * t);
-                    int b = 50;
-
-                    string colorHex = $"#{r:X2}{g:X2}{b:X2}";
+                    var colorHex = GetColorGradient(t);
                     return $" <color={colorHex}>[{damageValue}]</color>";
                 }
 
                 return "";
             }
-            else
-            {
-                if (ammo?.Damage != null)
-                {
-                    return $" [{ammo.Damage}]";
-                }
 
-                return "";
-            }
+            return GetDamageValue(ammo);
         }
         
         private static string GetSpeedValue(AmmoTemplate ammo, int minSpeed, int maxSpeed)
@@ -239,32 +217,74 @@ namespace BetterAmmoLoadingList.Patch
                     float t = (maxSpeed == minSpeed) ? 1f : (speedValue - minSpeed) / (float)(maxSpeed - minSpeed);
                     t = Mathf.Clamp(t, 0f, 1f);
             
-                    int r = (int)(255 * (1f - t));
-                    int g = (int)(255 * t);
-                    int b = 50;
-
-                    string colorHex = $"#{r:X2}{g:X2}{b:X2}";
+                    var colorHex = GetColorGradient(t);
                     return $" <color={colorHex}>[{formattedValue}]</color>";
                 }
-
-                return "";
             }
-            else
+
+            return GetSpeedValue(ammo);
+        }
+
+        /// <summary>
+        /// Get speed ammo without formatting color
+        /// </summary>
+        /// <param name="ammo"></param>
+        /// <returns></returns>
+        private static string GetSpeedValue(AmmoTemplate ammo)
+        {
+            if (ammo?.InitialSpeed != null)
             {
-                if (ammo?.InitialSpeed != null)
-                {
-                    string formattedValue = ammo.InitialSpeed.ToString() + " " + "m/s".Localized();
+                string formattedValue = ammo.InitialSpeed + " " + "m/s".Localized();
                     
-                    return $" [{formattedValue}]";
-                }
-
-                return "";
+                return $" [{formattedValue}]";
             }
+            return "";
+        }
+        
+        /// <summary>
+        /// Get damage ammo without formatting color
+        /// </summary>
+        /// <param name="ammo"></param>
+        /// <returns></returns>
+        private static string GetDamageValue(AmmoTemplate ammo)
+        {
+            if (ammo?.Damage != null)
+            {
+                return $" [{ammo.Damage}]";
+            }
+
+            return "";
+        }
+        
+        /// <summary>
+        /// Get penetration power ammo without formatting color
+        /// </summary>
+        /// <param name="ammo"></param>
+        /// <returns></returns>
+        private static string GetPenetrationValue(AmmoTemplate ammo)
+        {
+            if (ammo?.PenetrationPower != null)
+            {
+                return $" [{ammo.PenetrationPower}]";
+            }
+
+            return "";
         }
 
         private static string LocalizedName(string itemTemplateId)
         {
             return LocaleManagerClass.LocaleManagerClass.method_4(itemTemplateId + " Name");
+        }
+
+        private static string GetColorGradient(float t)
+        {
+            Color colorBest = SettingsModel.Instance.ColorGradientBest.Value;
+            Color colorWorst = SettingsModel.Instance.ColorGradientWorst.Value;
+                    
+            Color finalColor = Color.Lerp(colorWorst, colorBest, t);
+            Color32 c32 = finalColor;
+
+            return $"#{c32.r:X2}{c32.g:X2}{c32.b:X2}";
         }
     }
 }
