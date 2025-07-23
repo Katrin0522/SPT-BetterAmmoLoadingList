@@ -24,7 +24,7 @@ namespace BetterAmmoLoadingList.Models
 		private SettingsModel(ConfigFile configFile)
 		{
 			GlobalEnable = configFile.Bind(
-				"Settings",
+				"1. Settings",
 				"Enable feature",
 				true,
 				new ConfigDescription("Enable sort/coloring/show stats ammo in load list",
@@ -35,7 +35,7 @@ namespace BetterAmmoLoadingList.Models
 					}));
 			
 			ColorGradient = configFile.Bind(
-				"Settings",
+				"1. Settings",
 				"Color Gradient",
 				true,
 				new ConfigDescription("Enable color gradient for context menu ammo load",
@@ -46,7 +46,7 @@ namespace BetterAmmoLoadingList.Models
 					}));
 			
 			ColorGradientBest = configFile.Bind(
-				"Settings",
+				"1. Settings",
 				"Color Gradient Best",
 				Color.green,
 				new ConfigDescription("Color preset for best ammo",
@@ -57,7 +57,7 @@ namespace BetterAmmoLoadingList.Models
 					}));
 			
 			ColorGradientWorst = configFile.Bind(
-				"Settings",
+				"1. Settings",
 				"Color Gradient Worst",
 				Color.red,
 				new ConfigDescription("Color preset for worst ammo",
@@ -68,7 +68,7 @@ namespace BetterAmmoLoadingList.Models
 					}));
 			
 			SortOrder = configFile.Bind(
-				"Settings",
+				"1. Settings",
 				"Sort Order Type",
 				SortOrderType.Descending,
 				new ConfigDescription("Sort order by selected type",
@@ -79,7 +79,7 @@ namespace BetterAmmoLoadingList.Models
 					}));
 			
 			StatAmmo = configFile.Bind(
-				"Settings",
+				"1. Settings",
 				"Sort ammo by stat type",
 				StatAmmoType.PenetrationPower,
 				new ConfigDescription("Sort order by selected stat ammo type",
@@ -90,7 +90,7 @@ namespace BetterAmmoLoadingList.Models
 					}));
 			
 			ShowAllStats = configFile.Bind(
-				"[EXPERIMENTAL SETTINGS]",
+				"2. EXPERIMENTAL SETTINGS",
 				"Show All Stats",
 				false,
 				new ConfigDescription("[EXPERIMENTAL] Show all stats in list, them will be sorted by selected stat type, selected type will be colored, other non color",
@@ -101,7 +101,7 @@ namespace BetterAmmoLoadingList.Models
 					}));
 			
 			IsWrapText = configFile.Bind(
-				"[EXPERIMENTAL SETTINGS]",
+				"2. EXPERIMENTAL SETTINGS",
 				"Warp Text Stats",
 				false,
 				new ConfigDescription("[EXPERIMENTAL] When this setting is enabled, the ammunition stats will wrap to the following line",
