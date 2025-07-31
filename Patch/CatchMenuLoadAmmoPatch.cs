@@ -32,14 +32,22 @@ namespace BetterAmmoLoadingList.Patch
             
             ISession session = PlayerHelper.GetSession();
             MagazineBuildClass magazineBuildClass = session.MagBuildsStorage;
+            
             if (session == null || magazineBuildClass == null)
+            {
+                return;
+            }
+            
+            var ammoListRaw = uiContext.FindCompatibleAmmo(magazine).ToList();
+
+            if (ammoListRaw.Count == 0)
             {
                 return;
             }
             
             __instance.dictionary_0.Clear();
             
-            var ammoListRaw = uiContext.FindCompatibleAmmo(magazine).ToList();
+            
             
             var ammoWithData = ammoListRaw
                 .Select(pair => new
