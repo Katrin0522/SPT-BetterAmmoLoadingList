@@ -23,8 +23,7 @@
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
         <PostBuildEvent>
-            copy /Y "F:\GitHub\Tarkov\SPT-BetterAmmoLoadingList\bin\Debug\Kat.BetterAmmoLoadingList.dll" "F:\Games\SPT-Dev\BepInEx\plugins\Kat.BetterAmmoLoadingList.dll
-            copy /Y "F:\GitHub\Tarkov\SPT-BetterAmmoLoadingList\bin\Debug\Kat.BetterAmmoLoadingList.dll" "F:\Games\SPT\BepInEx\plugins\Kat.BetterAmmoLoadingList.dll
+            copy /Y "C:\GitHub\Tarkov\SPT-BetterAmmoLoadingList\bin\Debug\Kat.BetterAmmoLoadingList.dll" "C:\Games\SPT4_0\BepInEx\plugins\Kat.BetterAmmoLoadingList.dll
         </PostBuildEvent>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -35,16 +34,12 @@
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
         <PostBuildEvent>
-            copy /Y "F:\GitHub\Tarkov\SPT-BetterAmmoLoadingList\bin\Release\Kat.BetterAmmoLoadingList.dll" "F:\Games\SPT-Dev\BepInEx\plugins\Kat.BetterAmmoLoadingList.dll
-            copy /Y "F:\GitHub\Tarkov\SPT-BetterAmmoLoadingList\bin\Release\Kat.BetterAmmoLoadingList.dll" "F:\Games\SPT\BepInEx\plugins\Kat.BetterAmmoLoadingList.dll
+            copy /Y "C:\GitHub\Tarkov\SPT-BetterAmmoLoadingList\bin\Release\Kat.BetterAmmoLoadingList.dll" "C:\Games\SPT4_0\BepInEx\plugins\Kat.BetterAmmoLoadingList.dll
         </PostBuildEvent>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="0Harmony">
             <HintPath>Dependencies\0Harmony.dll</HintPath>
-        </Reference>
-        <Reference Include="SAIN">
-          <HintPath>..\..\..\Games\SPT\BepInEx\plugins\SAIN\SAIN.dll</HintPath>
         </Reference>
         <Reference Include="spt-common">
             <HintPath>Dependencies\spt-common.dll</HintPath>

@@ -16,16 +16,15 @@ namespace BetterAmmoLoadingList.Patch
     {
         protected override MethodBase GetTargetMethod()
         {
-            return AccessTools.Constructor(typeof(GClass3493), new Type[]
-            {
+            return AccessTools.Constructor(typeof(GClass3779), [
                 typeof(MagazineItemClass),
                 typeof(ItemContextAbstractClass),
                 typeof(ItemUiContext)
-            });
+            ]);
         }
         
         [PatchPostfix]
-        public static void Postfix(GClass3493 __instance, MagazineItemClass magazine, ItemContextAbstractClass itemContext, ItemUiContext uiContext)
+        public static void Postfix(GClass3779 __instance, MagazineItemClass magazine, ItemContextAbstractClass itemContext, ItemUiContext uiContext)
         {
             if(!SettingsModel.Instance.GlobalEnable.Value)
                 return;
@@ -45,7 +44,7 @@ namespace BetterAmmoLoadingList.Patch
                 return;
             }
             
-            __instance.dictionary_0.Clear();
+            __instance.Dictionary_0.Clear();
             
             
             
@@ -78,13 +77,13 @@ namespace BetterAmmoLoadingList.Patch
                     {
                         var pair = entry.Pair;
 
-                        var ammoClass = new GClass3493.Class2711
+                        var ammoClass = new GClass3779.Class2875
                         {
-                            gclass3493_0 = __instance,
+                            gclass3779_0 = __instance,
                             ammoType = pair.Key
                         };
                 
-                        __instance.bool_0 = true;
+                        __instance.Bool_0 = true;
 
                         AmmoTemplate ammoData = magazineBuildClass.GetAmmoTemplate(ammoClass.ammoType);
 
@@ -124,13 +123,13 @@ namespace BetterAmmoLoadingList.Patch
                     {
                         var pair = entry.Pair;
 
-                        var ammoClass = new GClass3493.Class2711
+                        var ammoClass = new GClass3779.Class2875
                         {
-                            gclass3493_0 = __instance,
+                            gclass3779_0 = __instance,
                             ammoType = pair.Key
                         };
                 
-                        __instance.bool_0 = true;
+                        __instance.Bool_0 = true;
 
                         AmmoTemplate ammoData = magazineBuildClass.GetAmmoTemplate(ammoClass.ammoType);
 
@@ -171,13 +170,13 @@ namespace BetterAmmoLoadingList.Patch
                     {
                         var pair = entry.Pair;
 
-                        var ammoClass = new GClass3493.Class2711
+                        var ammoClass = new GClass3779.Class2875
                         {
-                            gclass3493_0 = __instance,
+                            gclass3779_0 = __instance,
                             ammoType = pair.Key
                         };
                 
-                        __instance.bool_0 = true;
+                        __instance.Bool_0 = true;
 
                         AmmoTemplate ammoData = magazineBuildClass.GetAmmoTemplate(ammoClass.ammoType);
 
