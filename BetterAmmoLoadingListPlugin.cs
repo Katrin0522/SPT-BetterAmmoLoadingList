@@ -5,7 +5,7 @@ using BetterAmmoLoadingList.Patch;
 
 namespace BetterAmmoLoadingList
 {
-    [BepInPlugin("katrin0522.BetterAmmoLoadingList", "BALL - BetterAmmoLoadingList", "1.1.0")]
+    [BepInPlugin("katrin0522.betterammoloadinglist", "BALL - BetterAmmoLoadingList", "1.1.0")]
     public class BetterAmmoLoadingListPlugin : BaseUnityPlugin
     {
         public static BetterAmmoLoadingListPlugin Instance { get; private set; }

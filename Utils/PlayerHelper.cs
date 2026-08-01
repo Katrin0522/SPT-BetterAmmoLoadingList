@@ -11,7 +11,7 @@ namespace BetterAmmoLoadingList.Utils
 
         public static PlayerHelper Instance => _instance ??= new PlayerHelper();
     
-        public static ISession GetSession(bool throwIfNull = false)
+        public static IEftSession GetSession(bool throwIfNull = false)
         {
             var session = ClientAppUtils.GetClientApp().Session;
 

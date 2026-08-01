@@ -3,6 +3,8 @@ using System.Linq;
 using System.Reflection;
 using BetterAmmoLoadingList.Enums;
 using BetterAmmoLoadingList.Models;
+using EFT;
+using EFT.Builds;
 using EFT.InventoryLogic;
 using EFT.UI;
 using HarmonyLib;
@@ -16,23 +18,23 @@ namespace BetterAmmoLoadingList.Patch
     {
         protected override MethodBase GetTargetMethod()
         {
-            return AccessTools.Constructor(typeof(GClass3779), [
-                typeof(MagazineItemClass),
-                typeof(ItemContextAbstractClass),
+            return AccessTools.Constructor(typeof(LoadMagContextInteractions), [
+                typeof(Magazine),
+                typeof(ItemContext),
                 typeof(ItemUiContext)
             ]);
         }
         
         [PatchPostfix]
-        public static void Postfix(GClass3779 __instance, MagazineItemClass magazine, ItemContextAbstractClass itemContext, ItemUiContext uiContext)
+        public static void Postfix(LoadMagContextInteractions __instance, Magazine magazine, ItemContext itemContext, ItemUiContext uiContext)
         {
             if(!SettingsModel.Instance.GlobalEnable.Value)
                 return;
             
-            ISession session = PlayerHelper.GetSession();
-            MagazineBuildClass magazineBuildClass = session.MagBuildsStorage;
-            
-            if (session == null || magazineBuildClass == null)
+            IEftSession session = PlayerHelper.GetSession();
+            MagBuildsStorage magazineBuildsStorage = session?.MagBuildsStorage;
+
+            if (magazineBuildsStorage == null)
             {
                 return;
             }
@@ -44,7 +46,7 @@ namespace BetterAmmoLoadingList.Patch
                 return;
             }
             
-            __instance.Dictionary_0.Clear();
+            __instance._dynamicInteractions.Clear();
             
             
             
@@ -52,7 +54,7 @@ namespace BetterAmmoLoadingList.Patch
                 .Select(pair => new
                 {
                     Pair = pair,
-                    Ammo = magazineBuildClass.GetAmmoTemplate(pair.Key)
+                    Ammo = magazineBuildsStorage.GetAmmoTemplate(pair.Key)
                 })
                 .Where(x => x.Ammo != null)
                 .ToList();
@@ -77,15 +79,11 @@ namespace BetterAmmoLoadingList.Patch
                     {
                         var pair = entry.Pair;
 
-                        var ammoClass = new GClass3779.Class2875
-                        {
-                            gclass3779_0 = __instance,
-                            ammoType = pair.Key
-                        };
-                
-                        __instance.Bool_0 = true;
+                        string ammoType = pair.Key;
 
-                        AmmoTemplate ammoData = magazineBuildClass.GetAmmoTemplate(ammoClass.ammoType);
+                        __instance._hasCompatibleAmmo = true;
+
+                        AmmoTemplate ammoData = magazineBuildsStorage.GetAmmoTemplate(ammoType);
 
                         string penetrateValue = GetPenetrationValue(ammoData, minPen, maxPen);
                         
@@ -94,13 +92,18 @@ namespace BetterAmmoLoadingList.Patch
                         {
                             string speedValue = GetSpeedValue(ammoData);
                             string damageValue = GetDamageValue(ammoData);
-                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{GetWrapText()}<color=#ADB8BC>{damageValue}</color>{penetrateValue}<color=#ADB8BC>{speedValue}</color></b>";
+                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{GetWrapText()}<color=#ADB8BC>{damageValue}</color>{penetrateValue}<color=#ADB8BC>{speedValue}</color></b>";
                         }
                         else
                         {
-                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{penetrateValue}</b>";
+                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{penetrateValue}</b>";
                         }
-                        __instance.method_2(ammoClass.ammoType, ammoTextItem, ammoClass.method_0);
+                        var callback = new LoadMagContextInteractions.CG_Ctor
+                        {
+                            LoadMagContextInteractions = __instance,
+                            ammoType = ammoType
+                        };
+                        __instance.method_2(ammoType, ammoTextItem, callback.method_0);
                     }
 
                     break;
@@ -123,15 +126,11 @@ namespace BetterAmmoLoadingList.Patch
                     {
                         var pair = entry.Pair;
 
-                        var ammoClass = new GClass3779.Class2875
-                        {
-                            gclass3779_0 = __instance,
-                            ammoType = pair.Key
-                        };
-                
-                        __instance.Bool_0 = true;
+                        string ammoType = pair.Key;
 
-                        AmmoTemplate ammoData = magazineBuildClass.GetAmmoTemplate(ammoClass.ammoType);
+                        __instance._hasCompatibleAmmo = true;
+
+                        AmmoTemplate ammoData = magazineBuildsStorage.GetAmmoTemplate(ammoType);
 
                         string damageValue = GetDamageValue(ammoData, minDamage, maxDamage);
 
@@ -140,14 +139,19 @@ namespace BetterAmmoLoadingList.Patch
                         {
                             string speedValue = GetSpeedValue(ammoData);
                             string penetrateValue = GetPenetrationValue(ammoData);
-                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{GetWrapText()}{damageValue}<color=#ADB8BC>{penetrateValue}</color><color=#ADB8BC>{speedValue}</color></b>";
+                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{GetWrapText()}{damageValue}<color=#ADB8BC>{penetrateValue}</color><color=#ADB8BC>{speedValue}</color></b>";
                         }
                         else
                         {
-                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{damageValue}</b>";
+                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{damageValue}</b>";
                         }
 
-                        __instance.method_2(ammoClass.ammoType, ammoTextItem, ammoClass.method_0);
+                        var callback = new LoadMagContextInteractions.CG_Ctor
+                        {
+                            LoadMagContextInteractions = __instance,
+                            ammoType = ammoType
+                        };
+                        __instance.method_2(ammoType, ammoTextItem, callback.method_0);
                     }
 
                     break;
@@ -170,15 +174,11 @@ namespace BetterAmmoLoadingList.Patch
                     {
                         var pair = entry.Pair;
 
-                        var ammoClass = new GClass3779.Class2875
-                        {
-                            gclass3779_0 = __instance,
-                            ammoType = pair.Key
-                        };
-                
-                        __instance.Bool_0 = true;
+                        string ammoType = pair.Key;
 
-                        AmmoTemplate ammoData = magazineBuildClass.GetAmmoTemplate(ammoClass.ammoType);
+                        __instance._hasCompatibleAmmo = true;
+
+                        AmmoTemplate ammoData = magazineBuildsStorage.GetAmmoTemplate(ammoType);
 
                         string speedValue = GetSpeedValue(ammoData, minSpeed, maxSpeed);
 
@@ -187,14 +187,19 @@ namespace BetterAmmoLoadingList.Patch
                         {
                             string damageValue = GetDamageValue(ammoData);
                             string penetrateValue = GetPenetrationValue(ammoData);
-                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{GetWrapText()}<color=#ADB8BC>{damageValue}</color><color=#ADB8BC>{penetrateValue}</color>{speedValue}</b>";
+                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{GetWrapText()}<color=#ADB8BC>{damageValue}</color><color=#ADB8BC>{penetrateValue}</color>{speedValue}</b>";
                         }
                         else
                         {
-                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoClass.ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{speedValue}</b>";
+                            ammoTextItem = $"<b><color=#C6C4B2>{LocalizedName(ammoType)}</color> <color=#ADB8BC>({pair.Value})</color>{speedValue}</b>";
                         }
 
-                        __instance.method_2(ammoClass.ammoType, ammoTextItem, ammoClass.method_0);
+                        var callback = new LoadMagContextInteractions.CG_Ctor
+                        {
+                            LoadMagContextInteractions = __instance,
+                            ammoType = ammoType
+                        };
+                        __instance.method_2(ammoType, ammoTextItem, callback.method_0);
                     }
 
                     break;
@@ -309,7 +314,7 @@ namespace BetterAmmoLoadingList.Patch
 
         private static string LocalizedName(string itemTemplateId)
         {
-            return LocaleManagerClass.LocaleManagerClass.method_4(itemTemplateId + " Name");
+            return new MongoID(itemTemplateId).LocalizedName();
         }
 
         private static string GetColorGradient(float t)
